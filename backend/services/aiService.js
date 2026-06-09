@@ -49,5 +49,4 @@ Rispondi con questo JSON:
 
   const content = completion.choices[0].message.content;
   const clean = content.replace(/```json|```/g, "").trim();
-  return JSON.parse(clean);
 };

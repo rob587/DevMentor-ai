@@ -34,9 +34,9 @@ export const analyzeCandidate = async (req, res) => {
       matched,
       missing,
       githubSummary,
+      aiAnalysis,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Errore interno del server" });
   }
 };
