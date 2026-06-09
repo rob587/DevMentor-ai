@@ -1,5 +1,6 @@
 import { fetchGitHubData } from "../services/githubService.js";
 import { parseJobDescription, parseCV } from "../services/parserService.js";
+import { generateAIAnalysis } from "../services/aiService.js";
 
 export const analyzeCandidate = async (req, res) => {
   try {
@@ -19,6 +20,14 @@ export const analyzeCandidate = async (req, res) => {
     const matched = cvSkills.filter((skill) => jobSkills.includes(skill));
     const missing = jobSkills.filter((skill) => !cvSkills.includes(skill));
     const matchScore = Math.round((matched.length / jobSkills.length) * 100);
+
+    const aiAnalysis = await generateAIAnalysis(
+      jobDescription,
+      cvText,
+      githubSummary,
+      matched,
+      missing,
+    );
 
     res.json({
       matchScore,
