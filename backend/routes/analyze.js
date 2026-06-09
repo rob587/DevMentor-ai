@@ -3,6 +3,6 @@ import { analyzeCandidate } from "../controllers/analyzeController.js";
 
 const router = express.Router();
 
-router.post("analyze", analyzeCandidate);
+router.post("/analyze", analyzeCandidate);
 
 export default router;
