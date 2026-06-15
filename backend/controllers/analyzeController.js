@@ -9,6 +9,17 @@ export const analyzeCandidate = async (req, res) => {
     if (!jobDescription || !cvText || !githubUsername) {
       return res.status(400).json({ error: "Tutti i campi sono obbligatori!" });
     }
+
+    let cvText = "";
+    if (req.file) {
+      cvText = await extractTextFromPDF(req.file.buffer);
+    } else if (req.body.cvText) {
+      cvText = req.body.cvText;
+    } else {
+      return res
+        .status(400)
+        .json({ error: "Inserisci il CV come testo o PDF" });
+    }
     //  Fetch del username di git
     const githubSummary = await fetchGitHubData(githubUsername);
 
