@@ -1,15 +1,17 @@
 import { fetchGitHubData } from "../services/githubService.js";
 import { parseJobDescription, parseCV } from "../services/parserService.js";
 import { generateAIAnalysis } from "../services/aiService.js";
+import { extractTextFromPDF } from "../services/pdfService.js";
 
 export const analyzeCandidate = async (req, res) => {
   try {
-    const { jobDescription, cvText, githubUsername } = req.body;
+    const { jobDescription, githubUsername } = req.body;
 
-    if (!jobDescription || !cvText || !githubUsername) {
-      return res.status(400).json({ error: "Tutti i campi sono obbligatori!" });
+    if (!jobDescription || !githubUsername) {
+      return res.status(400).json({ error: "Tutti i campi sono obbligatori" });
     }
 
+    // Estrai testo CV — da PDF o testo libero
     let cvText = "";
     if (req.file) {
       cvText = await extractTextFromPDF(req.file.buffer);
@@ -20,18 +22,20 @@ export const analyzeCandidate = async (req, res) => {
         .status(400)
         .json({ error: "Inserisci il CV come testo o PDF" });
     }
-    //  Fetch del username di git
+
+    // 1. Fetch GitHub
     const githubSummary = await fetchGitHubData(githubUsername);
 
-    // parsing dell'inserzione e del cv
+    // 2. Parse JD e CV
     const jobSkills = parseJobDescription(jobDescription);
     const cvSkills = parseCV(cvText);
 
-    // sistema del matching
+    // 3. Match engine
     const matched = cvSkills.filter((skill) => jobSkills.includes(skill));
     const missing = jobSkills.filter((skill) => !cvSkills.includes(skill));
     const matchScore = Math.round((matched.length / jobSkills.length) * 100);
 
+    // 4. AI Analysis
     const aiAnalysis = await generateAIAnalysis(
       jobDescription,
       cvText,
@@ -48,6 +52,7 @@ export const analyzeCandidate = async (req, res) => {
       aiAnalysis,
     });
   } catch (error) {
-    res.status(500).json({ error: "Errore interno del server" });
+    console.error("ERRORE COMPLETO:", error);
+    res.status(500).json({ error: error.message });
   }
 };

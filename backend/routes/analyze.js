@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import express from "express";
+
 import multer from "multer";
 import { analyzeCandidate } from "../controllers/analyzeController.js";
 
