@@ -1,6 +1,9 @@
 import express from "express";
 import multer from "multer";
-import { analyzeCandidate } from "../controllers/analyzeController.js";
+import {
+  analyzeCandidate,
+  generateCoverLetterHandler,
+} from "../controllers/analyzeController.js";
 
 const router = express.Router();
 
@@ -17,5 +20,10 @@ const upload = multer({
 });
 
 router.post("/analyze", upload.single("cvFile"), analyzeCandidate);
+router.post(
+  "/cover-letter",
+  upload.single("cvFile"),
+  generateCoverLetterHandler,
+);
 
 export default router;
