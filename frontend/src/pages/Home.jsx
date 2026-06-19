@@ -32,7 +32,14 @@ export default function Home() {
         form.githubUsername,
         cvFile,
       );
-      navigate("/results", { state: { result } });
+      navigate("/results", {
+        state: {
+          result,
+          jobDescription: form.jobDescription,
+          cvText: form.cvText,
+          cvFile,
+        },
+      });
     } catch (err) {
       setError("Errore durante l'analisi. Riprova.");
     } finally {
