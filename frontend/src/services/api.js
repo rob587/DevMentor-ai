@@ -23,3 +23,19 @@ export const analyzeCandidate = async (
   });
   return response.data;
 };
+
+export const generateCoverLetter = async (jobDescription, cvText, cvFile) => {
+  const formData = new FormData();
+  formData.append("jobDescription", jobDescription);
+
+  if (cvFile) {
+    formData.append("cvFile", cvFile);
+  } else {
+    formData.append("cvText", cvText);
+  }
+
+  const response = await axios.post(`${API_URL}/cover-letter`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return response.data;
+};
