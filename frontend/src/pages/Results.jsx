@@ -4,12 +4,13 @@ import MatchScore from "../components/MatchScore";
 import SkillTags from "../components/SkillTags";
 import AIAnalysis from "../components/AIAnalysis";
 import GitHubSummary from "../components/GitHubSummary";
+import CoverLetterGenerator from "../components/CoverLetterGenerator";
 
 const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { result } = location.state || {};
+  const { result, jobDescription, cvText, cvFile } = location.state || {};
 
   if (!result) {
     navigate("/");
@@ -39,6 +40,13 @@ const Results = () => {
 
           {/* AI Analysis */}
           <AIAnalysis analysis={result.aiAnalysis} />
+
+          {/* Cover Letter */}
+          <CoverLetterGenerator
+            jobDescription={jobDescription}
+            cvText={cvText}
+            cvFile={cvFile}
+          />
 
           {/* Back button */}
           <button
